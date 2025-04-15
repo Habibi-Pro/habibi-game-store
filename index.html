@@ -1,21 +1,58 @@
+HTML   <!DOCTYPE html>
 
-<!DOCTYPE html>
-<html lang="fa">
-<head>
-    <meta charset="UTF-8">
-    <title>فروشگاه بازی آنلاین</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>فروشگاه سکه و یوسی</h1>
-    </header>
-    <main>
-        <section id="products"></section>
-    </main>
-    <footer>
-        <p>تماس با ما: support@example.com</p>
-    </footer>
-    <script src="script.js"></script>
-</body>
-</html>
+<html lang="fa"><head>  <meta charset="UTF-8">  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>حبیبی جم ستور</title>  <link rel="stylesheet" href="css/styles.css"></head><body>                                    
+  <!-- بخش هدر فروشگاه -->  <header><h1>Habibi Game Store</h1> <!-- یا "Habibi Game Store" -->
+
+  </header>  <!-- بخش محصولات -->  <div id="products"></div>  <script>
+  
+    document.addEventListener("DOMContentLoaded", () => {
+  
+      fetch('data/products.json')
+  
+
+  
+        .then(response => response.json())
+  
+        .then(products => {
+  
+          const container = document.getElementById('products');
+  
+          products.forEach(product => {
+  
+            const card = document.createElement('div');
+  
+            card.className = 'product-card';
+  
+            card.innerHTML = `
+  
+              <img src="${product["تصویر"]}" alt="${product["نام_محصول"]}">
+  
+              <h3>${product["نام_محصول"]}</h3>
+  
+              <p>تعداد فروخته شده: ${product["تعداد_فروخته_شده"]}</p>
+  
+              <p>موجودی: ${product["موجودی"]}</p>
+  
+              <p>تخفیف: ${product["تخفیف"]}</p>
+  
+              <p>قیمت اصلی: ${product["قیمت_اصلی_افغانی"]}</p>
+  
+              <p>قیمت تخفیف خورده: ${product["قیمت_تخفیف_خورده_افغانی"]}</p>
+  
+              <button onclick="alert('درگاه خرید فعال نشده')">خرید</button>
+  
+              <button class="add-to-cart-button" onclick="alert('به سبد خرید اضافه شد')">اضافه به سبد خرید</button>
+  
+            `;
+  
+            container.appendChild(card);
+  
+
+  
+          });
+  
+        });
+  
+    });
+  
+  </script>  <script src="js/app.js" defer></script></body></html>
