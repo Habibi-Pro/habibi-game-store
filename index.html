@@ -1,63 +1,65 @@
 <!DOCTYPE html>
 <html lang="fa">
-  <head> 
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حبیبی جم ستور</title>  <link rel="stylesheet" href="css/styles.css">
-  </head>
-  <body>                                    
-  <!-- بخش هدر فروشگاه -->  <header><h1>Habibi Game Store</h1> <!-- یا "Habibi Game Store" -->
+  <title>حبیبی جم ستور</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
 
-  </header>  <!-- بخش محصولات -->  <div id="products"></div>  <script>
-  
-    document.addEventListener("DOMContentLoaded", () => {
-  
-      fetch('data/products.json')
-  
+<body>
 
-  
-        .then(response => response.json())
-  
-        .then(products => {
-  
-          const container = document.getElementById('products');
-  
-          products.forEach(product => {
-  
-            const card = document.createElement('div');
-  
-            card.className = 'product-card';
-  
-            card.innerHTML = `
-  
-              <img src="${product["image"]}" alt="${product["نام_محصول"]}">
-  
-              <h3>${product["نام_محصول"]}</h3>
-  
-              <p>تعداد فروخته شده: ${product["تعداد_فروخته_شده"]}</p>
-  
-              <p>موجودی: ${product["موجودی"]}</p>
-  
-              <p>تخفیف: ${product["تخفیف"]}</p>
-  
-              <p>قیمت اصلی: ${product["قیمت_اصلی_افغانی"]}</p>
-  
-              <p>قیمت تخفیف خورده: ${product["قیمت_تخفیف_خورده_افغانی"]}</p>
-  
-              <button onclick="alert('درگاه خرید فعال نشده')">خرید</button>
-  
-              <button class="add-to-cart-button" onclick="alert('به سبد خرید اضافه شد')">اضافه به سبد خرید</button>
-  
-            `;
-  
-            container.appendChild(card);
-  
+  <!-- هدر -->
+  <header>
+    <h1>Habibi Game Store</h1>
+  </header>
 
-  
-          });
-  
-        });
-  
-    });
-  
-  </script>  <script src="js/app.js" defer></script></body></html>
+  <!-- نوار جستجو -->
+  <div id="search-bar">
+    <input type="text" id="searchInput" placeholder="جستجو در محصولات...">
+  </div>
+
+  <!-- فرم ثبت‌نام و ورود -->
+  <section id="auth-section">
+    <h2>ثبت‌نام / ورود</h2>
+    <input type="text" id="username" placeholder="نام کاربری">
+    <input type="password" id="password" placeholder="رمز عبور">
+    <button id="registerBtn">ثبت‌نام</button>
+    <button id="loginBtn">ورود</button>
+    <p id="authMessage"></p>
+  </section>
+
+  <!-- محصولات -->
+  <div id="products"></div>
+
+  <!-- سبد خرید -->
+  <section id="cart-section">
+    <h2>سبد خرید</h2>
+    <ul id="cartItems"></ul>
+  </section>
+
+  <!-- دکمه چت -->
+  <div id="chat-button">💬</div>
+
+  <!-- پنجره چت -->
+  <div id="chat-box">
+    <div class="chat-header">پشتیبانی آنلاین</div>
+    <div class="chat-body">
+      <p>سلام! چطور می‌تونم کمک‌تون کنم؟</p>
+    </div>
+    <div class="chat-input">
+      <input type="text" placeholder="پیامت رو بنویس...">
+      <button>ارسال</button>
+    </div>
+  </div>
+
+  <!-- فوتر -->
+  <footer>
+    <p>تماس با ما: ۰۰۹۳۷۹۵۲۳۱۱۰۱ | ایمیل: <a href="mailto:kihanh2020@gmail.com">kihanh2020@gmail.com</a></p>
+    <p>© 2025 حبیبی جم ستور</p>
+    <p><a href="https://wa.me/93795231101" target="_blank">گفت‌وگو در واتساپ</a></p>
+  </footer>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>
