@@ -205,3 +205,24 @@ footer a {
   color: #3f51b5;
   text-decoration: none;
 }
+#whatsapp-button {
+  position: fixed;
+  bottom: 90px;
+  left: 20px;
+  width: 55px;
+  height: 55px;
+  z-index: 999;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#whatsapp-button img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#whatsapp-button:hover {
+  transform: scale(1.1);
+}
