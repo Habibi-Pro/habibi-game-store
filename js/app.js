@@ -1,117 +1,150 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // بارگذاری محصولات از فایل JSON
+  // دریافت و نمایش محصولات
   fetch('data/products.json')
-    .then(response => response.json())
+    .then(res => res.json())
     .then(products => {
       const container = document.getElementById('products');
+      if (products.length === 0) {
+        container.innerHTML = "<p>هیچ محصولی یافت نشد.</p>";
+        return;
+      }
       products.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
           <img src="${product["image"]}" alt="${product["نام_محصول"]}">
           <h3>${product["نام_محصول"]}</h3>
-          <p>فروخته شده: ${product["تعداد_فروخته_شده"]}</p>
+          <p>تعداد فروخته شده: ${product["تعداد_فروخته_شده"]}</p>
           <p>موجودی: ${product["موجودی"]}</p>
           <p>تخفیف: ${product["تخفیف"]}</p>
-          <p>قیمت: <del>${product["قیمت_اصلی_افغانی"]}</del> <strong>${product["قیمت_تخفیف_خورده_افغانی"]}</strong></p>
-          <button onclick="buyProduct('${product["نام_محصول"]}')">خرید</button>
-          <button class="add-to-cart-button" onclick="addToCart('${product["نام_محصول"]}')">افزودن به سبد</button>
+          <p>قیمت اصلی: ${product["قیمت_اصلی_افغانی"]}</p>
+          <p>قیمت تخفیف خورده: ${product["قیمت_تخفیف_خورده_افغانی"]}</p>
+          <button class="buy-btn">خرید</button>
+          <button class="add-to-cart-btn">افزودن به سبد خرید</button>
         `;
         container.appendChild(card);
       });
+
+      // افزودن به سبد خرید
+      document.querySelectorAll('.add-to-cart-btn').forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+          addToCart(products[index]);
+        });
+      });
+    })
+    .catch(error => {
+      console.error('خطا در بارگذاری داده‌ها:', error);
+      const container = document.getElementById('products');
+      container.innerHTML = "<p>مشکلی در بارگذاری محصولات به وجود آمده است.</p>";
     });
 
-  // چت باکس باز/بسته
-  const chatButton = document.getElementById("chat-button");
-  const chatBox = document.getElementById("chat-box");
+  // چت باکس باز و بسته
+  const chatBtn = document.getElementById('chat-button');
+  const chatBox = document.getElementById('chat-box');
+  if (chatBtn && chatBox) {
+    chatBtn.addEventListener('click', () => {
+      // تغییر حالت نمایش چت‌باکس
+      chatBox.style.display = (chatBox.style.display === "flex") ? "none" : "flex";
+    });
+  }
 
-  chatButton.addEventListener("click", () => {
-    chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
-  });
+  // ورود و ثبت‌نام
+  const registerBtn = document.getElementById("registerBtn");
+  const loginBtn = document.getElementById("loginBtn");
+  const authMessage = document.getElementById("authMessage");
 
-  // ثبت‌نام
-  const registerForm = document.getElementById("registerForm");
-  if (registerForm) {
-    registerForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const username = document.getElementById("regUsername").value;
-      const password = document.getElementById("regPassword").value;
+  if (registerBtn) {
+    registerBtn.addEventListener("click", () => {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
 
       if (!username || !password) {
-        showMessage("authMessage", "تمام فیلدها الزامی هستند");
+        authMessage.textContent = "لطفاً نام کاربری و رمز را وارد کنید.";
         return;
       }
 
-      localStorage.setItem("user_" + username, password);
-      showMessage("authMessage", "ثبت‌نام موفق بود. اکنون وارد شوید", "green");
-      registerForm.reset();
+      localStorage.setItem("user", JSON.stringify({ username, password }));
+      localStorage.setItem("loggedInUser", username);
+      authMessage.textContent = "ثبت‌نام موفقیت‌آمیز بود!";
+      window.location.href = "index.html"; // رفتن به صفحه اصلی
     });
   }
 
-  // ورود
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const username = document.getElementById("loginUsername").value;
-      const password = document.getElementById("loginPassword").value;
+  if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const user = JSON.parse(localStorage.getItem("user"));
 
-      const storedPassword = localStorage.getItem("user_" + username);
-      if (storedPassword === password) {
+      if (user && user.username === username && user.password === password) {
         localStorage.setItem("loggedInUser", username);
-        window.location.href = "index.html";
+        authMessage.textContent = "ورود موفقیت‌آمیز!";
+        window.location.href = "index.html"; // رفتن به صفحه اصلی
       } else {
-        showMessage("authMessage", "نام کاربری یا رمز عبور نادرست است");
+        authMessage.textContent = "نام کاربری یا رمز اشتباه است.";
       }
     });
   }
 
-  // نمایش نام کاربر لاگین شده
-  const header = document.querySelector("header");
-  const currentUser = localStorage.getItem("loggedInUser");
-  if (currentUser && header) {
-    const welcome = document.createElement("p");
-    welcome.textContent = `خوش آمدید ${currentUser}`;
-    welcome.style.marginTop = "10px";
-    welcome.style.color = "lightyellow";
-    header.appendChild(welcome);
-  }
+  // نمایش وضعیت ورود و دکمه خروج
+  const userInfoDiv = document.getElementById("userInfo");
+  const userGreeting = document.getElementById("userGreeting");
+  const authMenu = document.getElementById("authMenu");
+  const registerLink = document.querySelector('a[href="register.html"]');
+  const loginLink = document.querySelector('a[href="login.html"]');
+  const user = localStorage.getItem("loggedInUser");
 
-  // جستجوی محصولات
-  const searchInput = document.getElementById("searchInput");
-  if (searchInput) {
-    searchInput.addEventListener("input", e => {
-      const keyword = e.target.value.toLowerCase();
-      const cards = document.querySelectorAll(".product-card");
-      cards.forEach(card => {
-        const name = card.querySelector("h3").textContent.toLowerCase();
-        card.style.display = name.includes(keyword) ? "block" : "none";
+  if (user) {
+    // نمایش سلام و نام کاربر
+    if (userGreeting) userGreeting.textContent = `سلام، ${user}`;
+    if (authMenu) authMenu.classList.add("hidden");
+    if (registerLink) registerLink.style.display = "none";
+    if (loginLink) loginLink.style.display = "none";
+
+    if (userInfoDiv) {
+      userInfoDiv.innerHTML = `
+        <img src="images/user-icon.png" class="user-icon" alt="کاربر">
+        <span id="userGreeting">سلام، ${user}</span>
+        <button id="logoutBtn" style="margin-right:10px;">خروج</button>
+      `;
+    }
+
+    // عملکرد دکمه خروج
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedInUser");
+        window.location.reload();
       });
-    });
+    }
+  } else {
+    if (userInfoDiv) {
+      userInfoDiv.addEventListener("click", () => {
+        if (authMenu) authMenu.classList.toggle("hidden");
+      });
+    }
   }
-});
 
-// پیام‌دهی
-function showMessage(id, msg, color = "red") {
-  const el = document.getElementById(id);
-  if (el) {
-    el.textContent = msg;
-    el.style.color = color;
-    setTimeout(() => {
-      el.textContent = "";
-    }, 4000);
-  }
-}
-
-// دکمه خرید
-function buyProduct(name) {
-  alert(`فعلاً امکان خرید برای "${name}" فعال نشده`);
-}
-
-// افزودن به سبد خرید
-function addToCart(name) {
+  // سبد خرید
+  const cartItemsList = document.getElementById("cartItems");
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push(name);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert(`"${name}" به سبد خرید افزوده شد`);
-}
+
+  function addToCart(product) {
+    cart.push(product);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    if (cartItemsList) {
+      cartItemsList.innerHTML = '';
+      cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item["نام_محصول"]} - ${item["قیمت_تخفیف_خورده_افغانی"]} افغانی`;
+        cartItemsList.appendChild(li);
+      });
+    }
+  }
+
+  updateCartUI(); // بارگذاری اولیه سبد خرید
+});
