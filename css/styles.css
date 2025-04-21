@@ -1,232 +1,71 @@
-/* فونت پیش‌فرض */
-body {
-  font-family: 'Tahoma', sans-serif;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
-}
+// تبدیل رمز عبور به SHA-256
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  
+  // ثبت‌نام
+  document.getElementById('registerBtn')?.addEventListener('click', async () => {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword')?.value;
+  
+    if (!username || !password || (confirmPassword && password !== confirmPassword)) {
+      alert('اطلاعات ثبت‌نام ناقص یا نادرست است.');
+      return;
+    }
+  
+    if (localStorage.getItem(`user_${username}`)) {
+      alert('این نام کاربری قبلاً ثبت شده است.');
+      return;
+    }
+  
+    const hashed = await hashPassword(password);
+    localStorage.setItem(`user_${username}`, hashed);
+    localStorage.setItem("loggedInUser", username);
+    alert('ثبت‌نام موفق بود.');
+    window.location.href = "index.html";
+  });
+  
+  // ورود
+  document.getElementById('loginBtn')?.addEventListener('click', async () => {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+  
+    const savedHash = localStorage.getItem(`user_${username}`);
+    if (!savedHash) {
+      alert("کاربر یافت نشد.");
+      return;
+    }
+  
+    const hashed = await hashPassword(password);
+    if (hashed !== savedHash) {
+      alert("رمز عبور اشتباه است.");
+      return;
+    }
+  
+    localStorage.setItem("loggedInUser", username);
+    alert(`خوش آمدی ${username}`);
+    window.location.href = "index.html";
+  });
+  
+// منتظر می‌مانیم که تمام محتوا بارگذاری شود
+document.addEventListener("DOMContentLoaded", function() {
+  const loginIcon = document.getElementById('loginIcon');
 
-/* هدر */
-header {
-  background-color: #3f51b5;
-  color: white;
-  padding: 20px;
-  text-align: center;
-  font-size: 1.8rem;
-}
+  // اگر آیکون موجود بود، event listener را اضافه کن
+  if (loginIcon) {
+    loginIcon.addEventListener('click', function() {
+      // هدایت به صفحه ورود
+      window.location.href = 'login.html';
+    });
+  }
+});
 
-/* نوار جستجو */
-#search-bar {
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-}
 
-#searchInput {
-  width: 60%;
-  padding: 12px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
+  
 
-/* بخش محصولات */
-#products {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
-  padding: 20px;
-}
-
-.product-card {
-  width: 250px;
-  background-color: white;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  text-align: center;
-}
-
-.product-card img {
-  width: 100%;
-  border-radius: 8px;
-}
-
-.product-card h3 {
-  margin: 10px 0;
-  color: #333;
-}
-
-.product-card p {
-  margin: 6px 0;
-  font-size: 0.9rem;
-}
-
-.product-card button {
-  margin-top: 10px;
-  padding: 10px 14px;
-  font-size: 0.95rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.product-card button:first-of-type {
-  background-color: #ff5722;
-  color: white;
-  margin-right: 6px;
-}
-
-.product-card button:last-of-type {
-  background-color: #4caf50;
-  color: white;
-}
-
-/* فرم ثبت‌نام و ورود */
-.auth-container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 30px;
-  background: white;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  border-radius: 16px;
-  text-align: center;
-}
-
-.auth-container h2 {
-  margin-bottom: 20px;
-  font-size: 1.8rem;
-  color: #333;
-}
-
-.auth-container input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-.auth-container button {
-  width: 100%;
-  padding: 12px;
-  background-color: #3f51b5;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.auth-container button:hover {
-  background-color: #303f9f;
-}
-
-.auth-message {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: red;
-}
-
-/* چت باکس */
-#chat-button {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background-color: #009688;
-  color: white;
-  padding: 12px 16px;
-  border-radius: 50%;
-  font-size: 1.4rem;
-  cursor: pointer;
-  z-index: 999;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-#chat-box {
-  display: none;
-  flex-direction: column;
-  position: fixed;
-  bottom: 80px;
-  left: 20px;
-  width: 300px;
-  height: 350px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-  z-index: 999;
-  overflow: hidden;
-}
-
-.chat-header {
-  background-color: #009688;
-  color: white;
-  padding: 10px;
-  text-align: center;
-}
-
-.chat-body {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-}
-
-.chat-input {
-  display: flex;
-  border-top: 1px solid #ccc;
-}
-
-.chat-input input {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  outline: none;
-}
-
-.chat-input button {
-  background-color: #009688;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  cursor: pointer;
-}
-
-/* فوتر */
-footer {
-  background-color: #eee;
-  text-align: center;
-  padding: 20px;
-  font-size: 0.9rem;
-  margin-top: 40px;
-}
-
-footer a {
-  color: #3f51b5;
-  text-decoration: none;
-}
-#whatsapp-button {
-  position: fixed;
-  bottom: 20px;       /* فاصله از پایین صفحه */
-  right: 80px;        /* فاصله از سمت راست، کنار دکمه چت */
-  width: 48px;
-  height: 48px;
-  z-index: 1000;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #25D366;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.3s ease;
-}
-
-#whatsapp-button img {
-  width: 26px;
-  height: 26px;
-}
-
-#whatsapp-button:hover {
-  transform: scale(1.1);
-}
+  
