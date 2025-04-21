@@ -10,26 +10,32 @@
 <body>
 
   <!-- هدر -->
-  <header>
-    <h1>Habibi Game Store</h1>
-  </header>
+ <!-- هدر -->
+ <header>
+  <h1>Habibi Game Store</h1>
+  
+  <div class="profile-container">
+    <!-- آیکون کاربر -->
+    <div id="userInfo" class="user-info">
+      <img src="images/user-icon.png" alt="آیکون کاربر" class="user-icon" id="loginIcon">
+      <span id="userGreeting">به حساب خود وارد شوید</span>
+      
+ 
+
+    </div>
+  </div>
+</header>
+
+   
+  
 
   <!-- نوار جستجو -->
   <div id="search-bar">
     <input type="text" id="searchInput" placeholder="جستجو در محصولات...">
   </div>
 
-  <!-- فرم ثبت‌نام و ورود -->
-  <section id="auth-section">
-    <h2>ثبت‌نام / ورود</h2>
-    <input type="text" id="username" placeholder="نام کاربری">
-    <input type="password" id="password" placeholder="رمز عبور">
-    <button id="registerBtn">ثبت‌نام</button>
-    <button id="loginBtn">ورود</button>
-    <p id="authMessage"></p>
-  </section>
-
-  <!-- محصولات -->
+  
+  <!-- لیست محصولات -->
   <div id="products"></div>
 
   <!-- سبد خرید -->
@@ -38,8 +44,10 @@
     <ul id="cartItems"></ul>
   </section>
 
-  <!-- دکمه چت -->
-  <div id="chat-button">💬</div>
+  <!--  دکمه چت شناور -->
+  <div id="chat-button" title="چت آنلاین">
+    <img src="images/chat-icon.png" alt="چت" style="width: 50px; height: 50px;">
+  </div>
 
   <!-- پنجره چت -->
   <div id="chat-box">
@@ -52,15 +60,91 @@
       <button>ارسال</button>
     </div>
   </div>
-  <a href="https://wa.me/93795231101" id="whatsapp-button" target="_blank" aria-label="گفت‌وگو در واتساپ">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساپ">
-</a>
-<footer>
-    <p>تماس با ما: ۰۰۹۳۷۹۵۲۳۱۱۰۱ | ایمیل: <a href="mailto:kihanh2020@gmail.com">kihanh2020@gmail.com</a></p>
-    <p>© 2025 حبیبی جم ستور</p>
-    <p><a href="https://wa.me/93795231101" target="_blank">گفت‌وگو در واتساپ</a></p>
-  </footer>
 
+
+  <div id="floating-icons">
+    <!-- آیکون چت -->
+  
+  
+  <!-- آیکون واتساپ -->
+  <a href="https://wa.me/93795231101" target="_blank" class="floating-icon">
+    <img src="images/whatsapp-icon.png" alt="WhatsApp">
+  </a>
+
+  <!-- آیکون تلگرام -->
+  <a href="https://t.me/KihanB1101" target="_blank" class="floating-icon">
+    <img src="images/telegram-icon.png" alt="Telegram">
+  </a>
+</div>
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- فوتر -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4>درباره ما</h4>
+        <p>ما یک فروشگاه آنلاین هستیم که بازی‌های ویدیویی را با قیمت مناسب ارائه می‌دهیم.</p>
+      </div>
+      <div class="footer-section">
+        <h4>اطلاعات تماس</h4>
+        <ul>
+          <li><a href="tel:+93795231101">تلفن: +93795231101</a></li>
+          <li><a href="mailto:support@habibigamestore.com">ایمیل: support@habibigamestore.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>لینک‌های مفید</h4>
+        <ul>
+          <li><a href="contact.html">تماس</a></li>
+          <li><a href="#">خانه</a></li>
+          <li><a href="#">محصولات</a></li>
+          <li><a href="#">ثبت‌نام</a></li>
+          <li><a href="#">ورود</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>دنبال کنید</h4>
+        <ul class="social-links">
+          <li><a href="#">فیسبوک</a></li>
+          <li><a href="#">اینستاگرام</a></li>
+          <li><a href="#">توییتر</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>کپی‌رایت © 2025 Habibi Game Store. تمامی حقوق محفوظ است.</p>
+    </div>
+  </footer>
+  
+
+  <!-- اسکریپت‌ها -->
   <script src="js/app.js" defer></script>
+  <script src="js/auth.js"></script>
+
 </body>
 </html>
